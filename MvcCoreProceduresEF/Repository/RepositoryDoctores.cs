@@ -8,16 +8,17 @@ using System.Data.Common;
 #region PROCEDIMIENTOS ALMACENADOS
 
 /*
-CREATE PROCEDURE SP_TODOS_DOCTORES
+CREATE OR ALTER PROCEDURE SP_TODOS_DOCTORES
 AS
-   SELECT * FROM DOCTOR
+   SELECT *
+   FROM DOCTOR
 GO
  
-CREATE PROCEDURE SP_INCREMENTAR_SALARIO_DOCTOR
+CREATE OR ALTER PROCEDURE SP_INCREMENTAR_SALARIO_DOCTOR
 (@INCREMENTO INT, @ESPECIALIDAD VARCHAR(40))
 AS
 	UPDATE DOCTOR
-    SET SALARIO = SALARIO + @INCREMENTO
+	SET SALARIO = SALARIO + @INCREMENTO
 	WHERE ESPECIALIDAD = @ESPECIALIDAD
 GO
 
@@ -53,7 +54,8 @@ namespace MvcCoreProceduresEF.Repository
         {
             string sql = "SP_TODOS_DOCTORES";
             var consulta = this.context.Doctores.FromSqlRaw(sql);
-            return consulta.ToList();
+            List<Doctor> doctores = consulta.AsEnumerable().ToList();
+            return doctores;
         }
 
         public List<string> GetEspecialidades()
@@ -77,16 +79,21 @@ namespace MvcCoreProceduresEF.Repository
             }
         }
 
-        public List<Doctor> IncrementarSalarioEspecialidad
-            (string especialidad, int incremento)
+        public List<Doctor> GetDoctoresEspecialidad(string especialidad)
+        {
+            string sql = "SP_DOCTORES_ESPECIALIDAD @ESPECIALIDAD";
+            SqlParameter paramEspecialidad = new SqlParameter("@ESPECIALIDAD", especialidad);
+            var consulta = this.context.Doctores.FromSqlRaw(sql, paramEspecialidad);
+            List<Doctor> doctores = consulta.AsEnumerable().ToList();
+            return doctores;
+        }
+
+        public void IncrementarSalarioEspecialidad(string especialidad, int incremento)
         {
             string sql = "SP_INCREMENTAR_SALARIO_DOCTOR @INCREMENTO, @ESPECIALIDAD";
             SqlParameter paramEspecialidad = new SqlParameter("@ESPECIALIDAD", especialidad);
             SqlParameter paramIncremento = new SqlParameter("@INCREMENTO", incremento);
             this.context.Database.ExecuteSqlRaw(sql, paramIncremento, paramEspecialidad);
-            sql = "SP_DOCTORES_ESPECIALIDAD @ESPECIALIDAD";
-            var consulta = this.context.Doctores.FromSqlRaw(sql, paramEspecialidad);
-            return consulta.ToList();
         }
     }
 }

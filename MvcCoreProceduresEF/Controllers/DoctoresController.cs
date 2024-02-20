@@ -23,8 +23,8 @@ namespace MvcCoreProceduresEF.Controllers
         [HttpPost]
         public IActionResult Index(string especialidad, int incremento)
         {
-            List<Doctor> doctores = this.repo.IncrementarSalarioEspecialidad
-                (especialidad, incremento);
+            this.repo.IncrementarSalarioEspecialidad(especialidad, incremento);
+            List<Doctor> doctores = this.repo.GetDoctoresEspecialidad(especialidad);
             ViewData["ESPECIALIDADES"] = this.repo.GetEspecialidades();
             return View(doctores);
         }
