@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 
 string connectionString = builder.Configuration.GetConnectionString("SqlEnfermos");
 builder.Services.AddTransient<RepositoryEnfermos>();
+builder.Services.AddTransient<RepositoryDoctores>();
 builder.Services.AddDbContext<EnfermoContext>
     (options => options.UseSqlServer(connectionString));
 
