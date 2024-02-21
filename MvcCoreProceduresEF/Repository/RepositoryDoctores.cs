@@ -43,9 +43,9 @@ namespace MvcCoreProceduresEF.Repository
 {
     public class RepositoryDoctores
     {
-        private EnfermoContext context;
+        private HospitalContext context;
 
-        public RepositoryDoctores(EnfermoContext context)
+        public RepositoryDoctores(HospitalContext context)
         {
             this.context = context;
         }

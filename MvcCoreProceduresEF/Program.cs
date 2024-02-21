@@ -7,10 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-string connectionString = builder.Configuration.GetConnectionString("SqlEnfermos");
+string connectionString = builder.Configuration.
+    GetConnectionString("SqlEnfermos");
 builder.Services.AddTransient<RepositoryEnfermos>();
 builder.Services.AddTransient<RepositoryDoctores>();
-builder.Services.AddDbContext<EnfermoContext>
+builder.Services.AddTransient<RepositoryViewEmpleados>();
+builder.Services.AddTransient<RepositoryTrabajadores>();
+builder.Services.AddDbContext<HospitalContext>
     (options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
